@@ -25,11 +25,7 @@ class ProgressClass extends React.Component {
 
   render() {
     return (
-      <Steps current={this.props.currentValue}>
-      <Step title="Enter Cname" description="Provide the CName" />
-      <Step title="Enter and submit filters" description="Fill the required details" />
-      <Step title="Completed" description="Rows fetched" />
-      </Steps>
+      <div>hi</div>
     );
   }
 }
