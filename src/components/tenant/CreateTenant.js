@@ -5,7 +5,7 @@ function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
-class UpdateTenantForm extends React.Component {
+class TenantCreateForm extends React.Component {
   componentDidMount() {
     // To disabled submit button at the beginning.
     this.props.form.validateFields();
@@ -15,7 +15,7 @@ class UpdateTenantForm extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     fetch(`http://localhost:3001/Tenant/`, {
-      method: 'PUT',
+      method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -32,11 +32,7 @@ class UpdateTenantForm extends React.Component {
     })
     .then(response => response.json())
     .catch(error => console.log('Error fetching and parsing data', error));
-    // this.props.form.validateFields((err, values) => {
-    //   if (!err) {
-    //     console.log('Received values of form: ', values);
-    //   }
-    // });
+    
   };
   state = {
       "id" : '',
@@ -64,7 +60,7 @@ class UpdateTenantForm extends React.Component {
       <Form layout="inline" onSubmit={this.handleSubmit}>
         <Form.Item validateStatus={idError ? 'error' : ''} help={idError || ''}>
           {getFieldDecorator('id', {
-            rules: [{ required: true, message: 'Id is required!' }],
+            rules: [{ required: true, message: 'Please input your id!' }],
           })(
             <Input
               prefix={<Icon type="data" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -74,7 +70,7 @@ class UpdateTenantForm extends React.Component {
         </Form.Item>
         <Form.Item validateStatus={org_idError ? 'error' : ''} help={org_idError || ''}>
           {getFieldDecorator('org_id', {
-            rules: [{ required: true, message: 'OrgId is required!' }],
+            rules: [{ required: true, message: 'Please input your org_id!' }],
           })(
             <Input
               prefix={<Icon type="data" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -84,7 +80,7 @@ class UpdateTenantForm extends React.Component {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
-            Update
+            Create
           </Button>
         </Form.Item>
       </Form>
@@ -92,4 +88,4 @@ class UpdateTenantForm extends React.Component {
   }
 }
 
-export default UpdateTenantForm;
+export default TenantCreateForm;

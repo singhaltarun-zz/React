@@ -20,6 +20,7 @@
     "grpc-web": "^1.0.4",
     "grpc-web-client": "^0.7.0",
     "material-ui": "^0.20.2",
+    "node-pre-gyp": "^0.13.0",
     "protoc-gen-grpc-web": "^1.0.5",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

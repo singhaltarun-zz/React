@@ -5,7 +5,7 @@ function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
-class CreateResource extends React.Component {
+class ResourceCreateForm extends React.Component {
   componentDidMount() {
     this.props.form.validateFields();
   }
@@ -119,4 +119,4 @@ resourceNameHandler(event){
   }
 }
 
-export default CreateResource;
+export default ResourceCreateForm;

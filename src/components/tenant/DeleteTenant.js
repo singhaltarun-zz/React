@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Icon, Input, Button } from 'antd';
+import { Popconfirm } from 'antd';
 
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -45,7 +46,7 @@ class TenantDeleteForm extends React.Component {
     // Only show error after a field is touched.
     const idError = isFieldTouched('id') && getFieldError('id');
     return (
-      <Form layout="inline" onSubmit={this.handleSubmit}>
+      <Form layout="inline">
         <Form.Item validateStatus={idError ? 'error' : ''} help={idError || ''}>
           {getFieldDecorator('id', {
             rules: [{ required: true, message: 'Please input your id!' }],
@@ -58,7 +59,13 @@ class TenantDeleteForm extends React.Component {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
-            Delete
+          <Popconfirm
+            title="Are you sure？"
+            icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
+            onConfirm = {this.handleSubmit}
+            >
+            <a href="#">Delete</a>
+        </Popconfirm>
           </Button>
         </Form.Item>
       </Form>

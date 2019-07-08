@@ -5,42 +5,39 @@ function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
-class HorizontalLoginForm extends React.Component {
+class UpdateResourceForm extends React.Component {
   componentDidMount() {
-    // To disabled submit button at the beginning.
     this.props.form.validateFields();
   }
 
 
   handleSubmit = e => {
     e.preventDefault();
-    fetch(`http://localhost:3001/Processor/`, {
-      method: 'POST',
+    fetch(`http://localhost:3001/Resource/`, {
+      method: 'PUT',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        "tenant" : {
+        "resource" : {
           "id" : this.state.id,
-          "org_id" : this.state.org_id,
+          "topic_name" : this.state.topic_name,
+          "namespace" : this.state.namespace,
+          "resource_name" : this.state.resource_name,
           "created_at" : 12,
-          "updated_at" : 21,
-          "state" : {}
+          "updated_at" : 21
       }
       })
     })
     .then(response => response.json())
     .catch(error => console.log('Error fetching and parsing data', error));
-    // this.props.form.validateFields((err, values) => {
-    //   if (!err) {
-    //     console.log('Received values of form: ', values);
-    //   }
-    // });
   };
   state = {
-      "id" : '',
-      "org_id" : ''
+    "id" : this.props.id,
+    "topic_name" : '',
+    "namespace" : '',
+    "resource_name" : ''
   }
 
   idHandler(event){
@@ -49,9 +46,19 @@ class HorizontalLoginForm extends React.Component {
       })
   }
 
-  orgIdHandler(event){
+  topicNameHandler(event){
     this.setState({
-        org_id : event.target.value
+        topic_name : event.target.value
+    })
+}
+namespaceHandler(event){
+    this.setState({
+        namespace : event.target.value
+    })
+}
+resourceNameHandler(event){
+    this.setState({
+        resource_name : event.target.value
     })
 }
   render() {
@@ -64,11 +71,32 @@ class HorizontalLoginForm extends React.Component {
       <Form layout="inline" onSubmit={this.handleSubmit}>
         <Form.Item validateStatus={idError ? 'error' : ''} help={idError || ''}>
           {getFieldDecorator('id', {
-            rules: [{ required: true, message: 'Please input your id!' }],
+            rules: [{ message: 'Please input your id!' }],
           })(
             <Input
               prefix={<Icon type="data" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="Id" value={this.state.id} onChange={this.idHandler.bind(this)}
+              placeholder={this.props.id}
+              disabled={true}
+            />,
+          )}
+        </Form.Item>
+        <Form.Item validateStatus={org_idError ? 'error' : ''} help={org_idError || ''}>
+          {getFieldDecorator('topic_name', {
+            rules: [{ required: true, message: 'Please input your org_id!' }],
+          })(
+            <Input
+              prefix={<Icon type="data" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder="TopicName"  value={this.state.topic_name} onChange={this.topicNameHandler.bind(this)}
+            />,
+          )}
+        </Form.Item>
+        <Form.Item validateStatus={org_idError ? 'error' : ''} help={org_idError || ''}>
+          {getFieldDecorator('namespace', {
+            rules: [{ required: true, message: 'Please input your org_id!' }],
+          })(
+            <Input
+              prefix={<Icon type="data" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder="Namespace"  value={this.state.namespace} onChange={this.namespaceHandler.bind(this)}
             />,
           )}
         </Form.Item>
@@ -78,13 +106,13 @@ class HorizontalLoginForm extends React.Component {
           })(
             <Input
               prefix={<Icon type="data" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder="Org_Id"  value={this.state.org_id} onChange={this.orgIdHandler.bind(this)}
+              placeholder="Resource"  value={this.state.resource_name} onChange={this.resourceNameHandler.bind(this)}
             />,
           )}
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
-            Create
+            Update
           </Button>
         </Form.Item>
       </Form>
@@ -92,4 +120,4 @@ class HorizontalLoginForm extends React.Component {
   }
 }
 
-export default HorizontalLoginForm;
+export default UpdateResourceForm;
