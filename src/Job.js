@@ -6,12 +6,15 @@ import { Button } from 'antd';
 import { Input, Form } from 'antd';
 import { Layout, Breadcrumb, Icon } from 'antd';
 import { Table } from 'antd';
+
+const { Search } = Input;
 const { Content } = Layout;
 
 class Job extends React.Component {
     state = {
         id: 0,
-        data: {}
+        data: {},
+        result: []
     }
     columns = [
         {
@@ -142,14 +145,31 @@ class Job extends React.Component {
             id: event.target.value
         })
     }
-    handleSubmit() {
+    func(data){
+        var result = [];
+        result.push(data);
+        this.setState(
+            {
+                result:result
+            }
+        )
+        console.log(result);
+    }
+    handleSubmit(id) {
         fetch(`http://localhost:3001/Job/`, {
-            method: 'GET'
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "job": {
+                    "id": id
+                }
+            })
         })
         .then(response => response.json())
-        .then(data => this.setState({
-            data: data
-        }))
+        .then(data => this.func(data["job"]))
         .catch(error => console.log('Error fetching and parsing data', error));
     }
     render() {
@@ -160,22 +180,12 @@ class Job extends React.Component {
                     <Breadcrumb style={{ margin: '16px 0' }}>
                         <Breadcrumb.Item>MunimG</Breadcrumb.Item>
                     </Breadcrumb>
-                    <Form layout="inline" onSubmit={this.handleSubmit}>
-                        <Form.Item style={{ width: '10%' }}>
-                            {
-                                <Input
-                                    prefix={<Icon type="data" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                    placeholder="Id" onChange={this.idHandler.bind(this)}
-                                />
-                            }
-                        </Form.Item>
-                        <Form.Item>
-                            <Button type="primary" htmlType="submit">
-                                Get Jobs
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                    <Table dataSource={this.state.data["jobs"]} columns={this.columns} scroll={{ x: 1500 }} style={{ width: '100%' }} />
+                    <Search
+                    placeholder="Enter JobID"
+                    onSearch={value => this.handleSubmit(value)}
+                    style={{ width: 200 }}
+                    />
+                    <Table dataSource={this.state.result} columns={this.columns} scroll={{ x: 1500 }} style={{ width: '100%' }} />
                 </Content>
             </Layout>
         );

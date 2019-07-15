@@ -20,8 +20,8 @@ class App extends React.Component {
             <Menu.Item key="1">Mindtickle</Menu.Item>
           </Menu>
         </Header>
-        <Tabs defaultActiveKey="1" style={{ height: '100%', width: '100%' }}>
-          <TabPane tab="Baton Registry" key="1" style={{ height: '100%', width: '100%' }}>
+        <Tabs defaultActiveKey="1" style={{ height: '100%', width: '100%'  }}>
+          <TabPane tab="Baton Registry" key="1" style={{ height: '99%', width: '100%'  }} >
             <Baton />
           </TabPane>
           <TabPane tab="MinimG" key="2">
@@ -29,7 +29,6 @@ class App extends React.Component {
           </TabPane>
         </Tabs>
       </div>
-
     );
   }
 }
