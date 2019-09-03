@@ -1,16 +1,17 @@
 import React from 'react';
-import './App.css';
+import '../../App.js';
 import 'antd/dist/antd.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'antd';
 import { Input, Form } from 'antd';
 import { Layout, Breadcrumb, Icon } from 'antd';
 import { Table } from 'antd';
+import {API_BASE_HOST} from '../../constants.js'
+import {API_BASE_PORT} from '../../constants.js'
 
 const { Search } = Input;
 const { Content } = Layout;
-
-class Job extends React.Component {
+class Stat extends React.Component {
     state = {
         id: 0,
         data: {},
@@ -139,6 +140,15 @@ class Job extends React.Component {
             width: 200,
             editable: true,
         },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (text, record) => (
+                <span>
+                    <a href="javascript:;" onClick={() => this.unblockJob(record.id)}>UnblockJob</a>
+                </span>
+            ),
+        },
     ]
     idHandler(event) {
         this.setState({
@@ -154,10 +164,21 @@ class Job extends React.Component {
             }
         )
         console.log(result);
-    }
+        }
     handleSubmit(id) {
-        fetch(`http://localhost:3001/Job/`, {
-            method: 'POST',
+        
+        console.log(API_BASE_HOST+':'+API_BASE_PORT)
+        fetch(API_BASE_HOST+':'+API_BASE_PORT+`/Job?id=${encodeURIComponent(id)}`, {
+            method: 'GET',
+        })
+        .then(response => response.json())
+        .then(data => this.func(data["job"]))
+        .catch(error => console.log('Error fetching and parsing data', error));
+    }
+
+    unblockJob(id){
+        fetch(API_BASE_HOST+':'+API_BASE_PORT+`/Job/`, {
+            method: 'PUT',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -174,22 +195,18 @@ class Job extends React.Component {
     }
     render() {
 
-        return (
-            <Layout style={{ height: '100%', width: '100%' }}>
-                <Content style={{ padding: '0 50px' }}>
-                    <Breadcrumb style={{ margin: '16px 0' }}>
-                        <Breadcrumb.Item>MunimG</Breadcrumb.Item>
-                    </Breadcrumb>
+            return (
+                <div>
                     <Search
                     placeholder="Enter JobID"
                     onSearch={value => this.handleSubmit(value)}
                     style={{ width: 200 }}
                     />
                     <Table dataSource={this.state.result} columns={this.columns} scroll={{ x: 1500 }} style={{ width: '100%' }} />
-                </Content>
-            </Layout>
-        );
+                </div>
+    
+            );
     }
 }
 
-export default Job;
+export default Stat;

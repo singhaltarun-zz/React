@@ -5,86 +5,62 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Layout, Menu, Breadcrumb, Icon} from 'antd';
 
 
-import ListTenant from './components/BatonRegistry/tenant/ListTenant'
-import ListResource from './components/BatonRegistry/resource/ListResource';
-import ListProcessor from './components/BatonRegistry/Processor/ListProcessor';
-import ListSubscription from './components/BatonRegistry/subscription/ListSubscription';
-
+import Jobs from './components/MunimJi/Job';
+import Worker from './components/MunimJi/Worker'
+import Offset from './components/MunimJi/Offset'
+import ListWorkersForm from './components/MunimJi/ListWorkers';
+import { Form } from 'antd';
+import Stat from './components/MunimJi/Stat';
+const ListWorkers = Form.create({ name: 'advanced_search' })(ListWorkersForm);
 
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
-class BatonRegistry extends React.Component {
+class Munimji extends React.Component {
     state = {
         status: 0,
         displayStatus: 0,
         resource: 0
     }
 
-    TenantListHandler() {
+    JobsHandler() {
         this.setState({
             displayStatus: 1,
             status: 0
         })
     }
 
-    TenantCreateHandler() {
-        this.setState({
-            status: 1,
-        })
-    }
-
-    TenantDeleteHandler() {
-        this.setState({
-            status: 2,
-        })
-    }
-
-    TenantUpdateHandler() {
-        this.setState({
-            status: 3,
-        })
-    }
-
-    ResourceListHandler() {
+    WorkerHandler() {
         this.setState({
             displayStatus: 2,
             status: 0
         })
     }
-    ResourceCreateHandler() {
+
+    OffsetHandler() {
         this.setState({
-            status: 4
+            displayStatus: 3,
+            status: 0
         })
     }
 
-    ResourceDeleteHandler() {
-        this.setState({
-            status: 5
-        })
-    }
-
-    ResourceUpdateHandler() {
-        this.setState({
-            status: 6
-        })
-    }
-
-    ProcessorListHandler() {
-        this.setState({
-            displayStatus: 3
-        })
-    }
-    SubscriptionListHandler() {
+    ListWorkerHandler() {
         this.setState({
             displayStatus: 4
         })
     }
+
+    StatsHandler() {
+        this.setState({
+            displayStatus: 5
+        })
+    }
+
     render() {
         return (
             <Layout style={{ height: '100%', width: '100%' }}>
                 <Content style={{ padding: '0 50px' }}>
                     <Breadcrumb style={{ margin: '16px 0' }}>
-                        <Breadcrumb.Item>Baton Registry</Breadcrumb.Item>
+                        <Breadcrumb.Item>Munimji</Breadcrumb.Item>
                     </Breadcrumb>
                     <Layout style={{ padding: '24px 0', background: '#fff', height: '100%', width: '100%' }} >
                         <Sider width={200} style={{ background: '#fff' }}>
@@ -97,52 +73,59 @@ class BatonRegistry extends React.Component {
                                     title={
                                         <span>
                                             <Icon type="user" />
-                                            Tenant
+                                            Jobs
                                         </span>
                                     }
-                                    onTitleClick={this.TenantListHandler.bind(this)}
+                                    onTitleClick={this.JobsHandler.bind(this)}
                                 >
+                                    <Menu.Item key="1">Search Job </Menu.Item>
+                                    <Menu.Item key="2">Unblock Job</Menu.Item>
                                 </SubMenu>
                                 <SubMenu
                                     key="sub2"
                                     title={
                                         <span>
                                             <Icon type="laptop" />
-                                            Resource
+                                            Workers
                                         </span>
                                     }
-                                    onTitleClick={this.ResourceListHandler.bind(this)}
+                                    onTitleClick={this.WorkerHandler.bind(this)}
                                 >
+                                    <Menu.Item key="3" onClick={this.WorkerHandler.bind(this)} >Search Worker </Menu.Item>
+                                    <Menu.Item key="4" onClick={Worker.FilterWorkerHandler}> Filters Workers</Menu.Item>
                                 </SubMenu>
                                 <SubMenu
                                     key="sub3"
                                     title={
                                         <span>
-                                            <Icon type="notification" />
-                                            subscription
+                                            <Icon type="laptop" />
+                                            Offsets
                                         </span>
                                     }
-                                    onTitleClick={this.SubscriptionListHandler.bind(this)}
+                                    
+                                    onTitleClick={this.OffsetHandler.bind(this)}
                                 >
+                                    <Menu.Item key="5">Search Offset </Menu.Item>
+                                    <Menu.Item key="6">Create  Offset</Menu.Item>
+                                    <Menu.Item key="7">Update  Offset</Menu.Item>
                                 </SubMenu>
                                 <SubMenu
                                     key="sub4"
                                     title={
                                         <span>
                                             <Icon type="user" />
-                                            Processor
+                                            Stats
                                         </span>
                                     }
-                                    onTitleClick={this.ProcessorListHandler.bind(this)}
-                                >
-                                </SubMenu>
+                                    onTitleClick={this.StatsHandler.bind(this)}
+                                ></SubMenu>
                             </Menu>
                         </Sider>
                         <Content style={{ padding: '0 24px', minHeight: 280 }}>
-                            {this.state.displayStatus === 1 && <ListTenant />}
-                            {(this.state.displayStatus === 2) && <ListResource />}
-                            {this.state.displayStatus === 3 && <ListProcessor />}
-                            {this.state.displayStatus === 4 && <ListSubscription />}
+                            {this.state.displayStatus === 1 && <Jobs />}
+                            {this.state.displayStatus === 2 && <Worker />}
+                            {this.state.displayStatus === 3 && <Offset />}
+                            {this.state.displayStatus === 5 && <Stat />}
                         </Content>
                     </Layout>
                 </Content>
@@ -151,4 +134,4 @@ class BatonRegistry extends React.Component {
     }
 }
 
-export default BatonRegistry;
+export default Munimji;
