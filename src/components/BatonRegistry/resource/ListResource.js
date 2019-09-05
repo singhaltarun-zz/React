@@ -62,23 +62,6 @@ class ListResource extends React.Component {
             width: 200,
             editable: true,
         },
-        {
-            title: 'Action',
-            key: 'action',
-            render: (text, record) => (
-                <span>
-                    <Popconfirm
-                        title="Are you sure？"
-                        icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
-                        onConfirm={() => this.handleDelete(record.id)}
-                    >
-                        <a href="#">Delete</a>
-                    </Popconfirm>
-                    <Divider type="vertical" />
-                    <a href="javascript:;" onClick={() => this.handleUpdate(record.id)}>Update</a>
-                </span>
-            ),
-        },
     ]
 
     handleDelete(id) {
@@ -116,6 +99,7 @@ class ListResource extends React.Component {
                 display: 0
             }))
             .catch(error => console.log('Error fetching and parsing data', error));
+            
     }
     negButtonHandler() {
         this.setState({

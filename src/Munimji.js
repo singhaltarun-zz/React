@@ -8,10 +8,9 @@ import { Layout, Menu, Breadcrumb, Icon} from 'antd';
 import Jobs from './components/MunimJi/Job';
 import Worker from './components/MunimJi/Worker'
 import Offset from './components/MunimJi/Offset'
-import ListWorkersForm from './components/MunimJi/ListWorkers';
 import { Form } from 'antd';
 import Stat from './components/MunimJi/Stat';
-const ListWorkers = Form.create({ name: 'advanced_search' })(ListWorkersForm);
+
 
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
@@ -78,8 +77,7 @@ class Munimji extends React.Component {
                                     }
                                     onTitleClick={this.JobsHandler.bind(this)}
                                 >
-                                    <Menu.Item key="1">Search Job </Menu.Item>
-                                    <Menu.Item key="2">Unblock Job</Menu.Item>
+                                    
                                 </SubMenu>
                                 <SubMenu
                                     key="sub2"
@@ -91,8 +89,6 @@ class Munimji extends React.Component {
                                     }
                                     onTitleClick={this.WorkerHandler.bind(this)}
                                 >
-                                    <Menu.Item key="3" onClick={this.WorkerHandler.bind(this)} >Search Worker </Menu.Item>
-                                    <Menu.Item key="4" onClick={Worker.FilterWorkerHandler}> Filters Workers</Menu.Item>
                                 </SubMenu>
                                 <SubMenu
                                     key="sub3"
@@ -105,9 +101,7 @@ class Munimji extends React.Component {
                                     
                                     onTitleClick={this.OffsetHandler.bind(this)}
                                 >
-                                    <Menu.Item key="5">Search Offset </Menu.Item>
-                                    <Menu.Item key="6">Create  Offset</Menu.Item>
-                                    <Menu.Item key="7">Update  Offset</Menu.Item>
+                                    
                                 </SubMenu>
                                 <SubMenu
                                     key="sub4"
@@ -123,9 +117,10 @@ class Munimji extends React.Component {
                         </Sider>
                         <Content style={{ padding: '0 24px', minHeight: 280 }}>
                             {this.state.displayStatus === 1 && <Jobs />}
+                            {this.state.displayStatus === 5 && <Stat />}
                             {this.state.displayStatus === 2 && <Worker />}
                             {this.state.displayStatus === 3 && <Offset />}
-                            {this.state.displayStatus === 5 && <Stat />}
+                            
                         </Content>
                     </Layout>
                 </Content>

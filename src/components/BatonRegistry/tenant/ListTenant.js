@@ -60,23 +60,6 @@ class ListTenant extends React.Component {
             width: 200,
             editable: true,
         },
-        {
-            title: 'Action',
-            key: 'action',
-            render: (text, record) => (
-                <span>
-                    <Popconfirm
-                        title="Are you sure？"
-                        icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
-                        onConfirm={() => this.handleDelete(record.id)}
-                    >
-                        <a href="#">Delete</a>
-                    </Popconfirm>
-                    <Divider type="vertical" />
-                    <a href="javascript:;" onClick={() => this.handleUpdate(record.id)}>Update</a>
-                </span>
-            ),
-        },
     ]
     handleDelete(id) {
         fetch(API_BASE_HOST + ':' + API_BASE_PORT +`/Tenant/`, {

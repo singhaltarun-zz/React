@@ -15,7 +15,8 @@ class Stat extends React.Component {
     state = {
         id: 0,
         data: {},
-        result: []
+        result: [],
+        status: 0,
     }
     columns = [
         {
@@ -26,99 +27,32 @@ class Stat extends React.Component {
 
         },
         {
-            title: 'Stat_Id',
+            title: 'Tenant_id',
             width: 200,
-            dataIndex: 'stat_id',
+            dataIndex: 'tenant_id',
             editable: true,
         },
         {
-            title: 'Scheduled_At',
-            dataIndex: 'scheduled_at',
-            width: 200,
-            editable: true,
-        },
-        {
-            title: 'Assigned_At',
-            dataIndex: 'assigned_at',
+            title: 'Event_type_id',
+            dataIndex: 'event_type_id',
             width: 200,
             editable: true,
         },
         {
-            title: 'Picked_At',
-            dataIndex: 'picked_at',
+            title: 'Count',
+            dataIndex: 'count',
             width: 200,
             editable: true,
         },
         {
-            title: 'Synced_At',
-            dataIndex: 'synced_at',
-            width: 200,
-            editable: true,
-        },
-        {
-            title: 'Started_At',
-            dataIndex: 'started_at',
-            width: 200,
-            editable: true,
-        },
-        {
-            title: 'Completion_at',
-            dataIndex: 'completion_at',
-            width: 200,
-            editable: true,
-        },
-        {
-            title: 'Worker_Id',
-            dataIndex: 'worker_id',
-            width: 200,
-            editable: true,
-        },
-        {
-            title: 'Start_Offset',
-            dataIndex: 'start_offset',
-            width: 200,
-            editable: true,
-        },
-        {
-            title: 'End_Offset',
-            width: 200,
-            dataIndex: 'end_offset',
-            editable: true,
-
-        },
-        {
-            title: 'Max_Memory',
-            width: 200,
-            dataIndex: 'max_memory',
-            editable: true,
-        },
-        {
-            title: 'Time_Taken',
-            dataIndex: 'time_taken',
-            width: 200,
-            editable: true,
-        },
-        {
-            title: 'Response',
-            dataIndex: 'response',
+            title: 'Processor_id',
+            dataIndex: 'processor_id',
             width: 200,
             editable: true,
         },
         {
             title: 'State',
             dataIndex: 'state',
-            width: 200,
-            editable: true,
-        },
-        {
-            title: 'Is_active',
-            dataIndex: 'is_active',
-            width: 200,
-            editable: true,
-        },
-        {
-            title: 'RetryCount',
-            dataIndex: 'retryCount',
             width: 200,
             editable: true,
         },
@@ -135,19 +69,16 @@ class Stat extends React.Component {
             editable: true,
         },
         {
-            title: 'Namespace',
-            dataIndex: 'namespace',
+            title: 'Processor_version',
+            dataIndex: 'processor_version',
             width: 200,
             editable: true,
         },
         {
-            title: 'Action',
-            key: 'action',
-            render: (text, record) => (
-                <span>
-                    <a href="javascript:;" onClick={() => this.unblockJob(record.id)}>UnblockJob</a>
-                </span>
-            ),
+            title: 'Namespace',
+            dataIndex: 'namespace',
+            width: 200,
+            editable: true,
         },
     ]
     idHandler(event) {
@@ -160,47 +91,34 @@ class Stat extends React.Component {
         result.push(data);
         this.setState(
             {
-                result:result
+                result:result[0]
             }
         )
-        console.log(result);
         }
     handleSubmit(id) {
-        
-        console.log(API_BASE_HOST+':'+API_BASE_PORT)
-        fetch(API_BASE_HOST+':'+API_BASE_PORT+`/Job?id=${encodeURIComponent(id)}`, {
-            method: 'GET',
-        })
-        .then(response => response.json())
-        .then(data => this.func(data["job"]))
-        .catch(error => console.log('Error fetching and parsing data', error));
-    }
-
-    unblockJob(id){
-        fetch(API_BASE_HOST+':'+API_BASE_PORT+`/Job/`, {
-            method: 'PUT',
+        fetch(API_BASE_HOST+':'+API_BASE_PORT+`/Stat/bulkStats`, {
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "job": {
-                    "id": id
-                }
+                "id": [id]
             })
         })
         .then(response => response.json())
-        .then(data => this.func(data["job"]))
+        
+       .then(data => this.func(data["stats"]))
         .catch(error => console.log('Error fetching and parsing data', error));
     }
-    render() {
 
+    render() {
             return (
                 <div>
                     <Search
-                    placeholder="Enter JobID"
+                    placeholder="Enter Comma seperated Stat ID (e.g. 1,2,3)"
                     onSearch={value => this.handleSubmit(value)}
-                    style={{ width: 200 }}
+                    style={{ width: 350 }}
                     />
                     <Table dataSource={this.state.result} columns={this.columns} scroll={{ x: 1500 }} style={{ width: '100%' }} />
                 </div>
