@@ -96,6 +96,7 @@ class Stat extends React.Component {
         )
         }
     handleSubmit(id) {
+        id =  id.split(',');
         fetch(API_BASE_HOST+':'+API_BASE_PORT+`/Stat/bulkStats`, {
             method: 'POST',
             headers: {
@@ -103,7 +104,7 @@ class Stat extends React.Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "id": [id]
+                "id": id
             })
         })
         .then(response => response.json())
