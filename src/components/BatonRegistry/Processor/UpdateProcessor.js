@@ -1,5 +1,7 @@
 import React from 'react';
 import { Form, Icon, Input, Button } from 'antd';
+import {API_BASE_HOST} from '../../../constants.js'
+import {API_BASE_PORT} from '../../../constants.js'
 const sleepcall = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
@@ -15,7 +17,7 @@ class UpdateProcessorForm extends React.Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        fetch(`http://localhost:3001/Processor/`, {
+        fetch(API_BASE_HOST+ ':' + API_BASE_PORT+`/Processor/`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',

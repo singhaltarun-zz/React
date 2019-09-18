@@ -3,12 +3,13 @@ import { Table, Popconfirm, Icon, Divider, Form } from 'antd';
 import 'antd/dist/antd.css';
 import ResourceCreateForm from './CreateResource';
 import ResourceUpdateForm from './UpdateResource';
+import {API_BASE_HOST} from '../../../constants.js'
+import {API_BASE_PORT} from '../../../constants.js'
 
 const CreateResource = Form.create({ name: 'advanced_search' })(ResourceCreateForm);
 const UpdateResource = Form.create({ name: 'advanced_search' })(ResourceUpdateForm);
 
-
-
+const FULL_HOST_URL= process.env.BATON_NODE_REST_API_DEPLOY_SERVICE_HOST + ':' + process.env.BATON_NODE_REST_API_DEPLOY_SERVICE_PORT;
 
 class ListResource extends React.Component {
     componentDidMount() {
@@ -61,27 +62,10 @@ class ListResource extends React.Component {
             width: 200,
             editable: true,
         },
-        {
-            title: 'Action',
-            key: 'action',
-            render: (text, record) => (
-                <span>
-                    <Popconfirm
-                        title="Are you sure？"
-                        icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
-                        onConfirm={() => this.handleDelete(record.id)}
-                    >
-                        <a href="#">Delete</a>
-                    </Popconfirm>
-                    <Divider type="vertical" />
-                    <a href="javascript:;" onClick={() => this.handleUpdate(record.id)}>Update</a>
-                </span>
-            ),
-        },
     ]
 
     handleDelete(id) {
-        fetch(`http://localhost:3001/Resource/`, {
+        fetch(API_BASE_HOST+ ':' + API_BASE_PORT+`/Resource/`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -106,7 +90,7 @@ class ListResource extends React.Component {
         })
     }
     ResourceList() {
-        fetch(`http://localhost:3001/Resource`, {
+        fetch(API_BASE_HOST+ ':' + API_BASE_PORT+`/Resource/`, {
             method: "get"
         })
             .then(response => response.json())
@@ -115,6 +99,7 @@ class ListResource extends React.Component {
                 display: 0
             }))
             .catch(error => console.log('Error fetching and parsing data', error));
+            
     }
     negButtonHandler() {
         this.setState({
