@@ -1,0 +1,8 @@
+{
+    "baton-ui":{
+      "build_vars" : {
+        "port" : 80
+      },
+      "build_cmd": "echo hello"
+    }
+  }

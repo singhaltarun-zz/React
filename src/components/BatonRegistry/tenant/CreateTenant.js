@@ -1,5 +1,7 @@
 import React from 'react';
 import { Form, Icon, Input, Button } from 'antd';
+import {API_BASE_HOST} from '../../../constants.js'
+import {API_BASE_PORT} from '../../../constants.js'
 const sleepcall = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
@@ -7,7 +9,7 @@ function hasErrors(fieldsError) {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
-class UpdateResourceForm extends React.Component {
+class TenantCreateForm extends React.Component {
     componentDidMount() {
         this.props.form.validateFields();
     }
@@ -15,20 +17,19 @@ class UpdateResourceForm extends React.Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        fetch(`http://localhost:3001/Resource/`, {
-            method: 'PUT',
+        fetch(API_BASE_HOST + ':'+ API_BASE_PORT +`/Tenant/`, {
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "resource": {
+                "tenant": {
                     "id": this.state.id,
-                    "topic_name": this.state.topic_name,
-                    "namespace": this.state.namespace,
-                    "resource_name": this.state.resource_name,
+                    "org_id": this.state.org_id,
                     "created_at": 12,
-                    "updated_at": 21
+                    "updated_at": 21,
+                    "state": {}
                 }
             })
         })
@@ -37,12 +38,11 @@ class UpdateResourceForm extends React.Component {
         sleepcall(500).then(() => {
             this.props.func();
         })
+
     };
     state = {
-        "id": this.props.id,
-        "topic_name": '',
-        "namespace": '',
-        "resource_name": ''
+        "id": '',
+        "org_id": ''
     }
 
     idHandler(event) {
@@ -51,25 +51,13 @@ class UpdateResourceForm extends React.Component {
         })
     }
 
-    topicNameHandler(event) {
+    orgIdHandler(event) {
         this.setState({
-            topic_name: event.target.value
-        })
-    }
-    namespaceHandler(event) {
-        this.setState({
-            namespace: event.target.value
-        })
-    }
-    resourceNameHandler(event) {
-        this.setState({
-            resource_name: event.target.value
+            org_id: event.target.value
         })
     }
     render() {
         const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
-
-        // Only show error after a field is touched.
         const idError = isFieldTouched('id') && getFieldError('id');
         const org_idError = isFieldTouched('org_id') && getFieldError('org_id');
         return (
@@ -83,36 +71,15 @@ class UpdateResourceForm extends React.Component {
             >
                 <Form onSubmit={this.handleSubmit} style={{ margin: 30, padding: 30 }}>
                     <Form.Item style={{ width: '80%' }}>
-                        <label>Update Resource</label>
+                        <label>Create Tenant</label>
                     </Form.Item>
                     <Form.Item validateStatus={idError ? 'error' : ''} help={idError || ''} style={{ width: '80%' }}>
                         {getFieldDecorator('id', {
-                            rules: [{ message: 'Please input your id!' }],
+                            rules: [{ required: true, message: 'Please input your id!' }],
                         })(
                             <Input
                                 prefix={<Icon type="data" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                placeholder={this.props.id}
-                                disabled={true}
-                            />,
-                        )}
-                    </Form.Item>
-                    <Form.Item validateStatus={org_idError ? 'error' : ''} help={org_idError || ''} style={{ width: '80%' }}>
-                        {getFieldDecorator('topic_name', {
-                            rules: [{ required: true, message: 'Please input your org_id!' }],
-                        })(
-                            <Input
-                                prefix={<Icon type="data" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                placeholder="TopicName" value={this.state.topic_name} onChange={this.topicNameHandler.bind(this)}
-                            />,
-                        )}
-                    </Form.Item>
-                    <Form.Item validateStatus={org_idError ? 'error' : ''} help={org_idError || ''} style={{ width: '80%' }}>
-                        {getFieldDecorator('namespace', {
-                            rules: [{ required: true, message: 'Please input your org_id!' }],
-                        })(
-                            <Input
-                                prefix={<Icon type="data" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                placeholder="Namespace" value={this.state.namespace} onChange={this.namespaceHandler.bind(this)}
+                                placeholder="Id" value={this.state.id} onChange={this.idHandler.bind(this)}
                             />,
                         )}
                     </Form.Item>
@@ -122,13 +89,13 @@ class UpdateResourceForm extends React.Component {
                         })(
                             <Input
                                 prefix={<Icon type="data" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                placeholder="Resource" value={this.state.resource_name} onChange={this.resourceNameHandler.bind(this)}
+                                placeholder="Org_Id" value={this.state.org_id} onChange={this.orgIdHandler.bind(this)}
                             />,
                         )}
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
-                            Update
+                            Create
                         </Button>
                     </Form.Item>
                 </Form>
@@ -137,4 +104,4 @@ class UpdateResourceForm extends React.Component {
     }
 }
 
-export default UpdateResourceForm;
+export default TenantCreateForm;

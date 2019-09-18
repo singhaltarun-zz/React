@@ -3,9 +3,10 @@ import './App.css';
 import 'antd/dist/antd.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Layout, Menu } from 'antd';
-import Baton from './Baton';
-import Job from './Job';
+import Job from './components/MunimJi/Job';
 import { Tabs } from 'antd';
+import BatonRegistry from './Baton';
+import Munimji from './Munimji';
 
 const { TabPane } = Tabs;
 const { Header } = Layout;
@@ -13,6 +14,7 @@ const { Header } = Layout;
 class App extends React.Component {
 
   render() {
+    
     return (
       <div style={{ height: '100%', width: '100%' }}>
         <Header className="header" >
@@ -21,11 +23,12 @@ class App extends React.Component {
           </Menu>
         </Header>
         <Tabs defaultActiveKey="1" style={{ height: '100%', width: '100%'  }}>
-          <TabPane tab="Baton Registry" key="1" style={{ height: '99%', width: '100%'  }} >
-            <Baton />
+          
+          <TabPane tab="MunimJI" key="1" style={{ height: '99%', width: '100%'  }} >
+            <Munimji />
           </TabPane>
-          <TabPane tab="MinimG" key="2">
-            <Job />
+          <TabPane tab="Baton Registry" key="2" style={{ height: '99%', width: '100%'  }} >
+            <BatonRegistry />
           </TabPane>
         </Tabs>
       </div>
