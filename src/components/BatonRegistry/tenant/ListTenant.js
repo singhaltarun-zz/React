@@ -3,6 +3,8 @@ import { Table, Divider, Icon, Form, Popconfirm } from 'antd';
 import 'antd/dist/antd.css';
 import TenantCreateForm from './CreateTenant';
 import TenantUpdateForm from './UpdateTenant';
+import {API_BASE_HOST} from '../../../constants.js'
+import {API_BASE_PORT} from '../../../constants.js'
 
 const CreateTenant = Form.create({ name: 'advanced_search' })(TenantCreateForm);
 const UpdateTenant = Form.create({ name: 'advanced_search' })(TenantUpdateForm);
@@ -58,26 +60,9 @@ class ListTenant extends React.Component {
             width: 200,
             editable: true,
         },
-        {
-            title: 'Action',
-            key: 'action',
-            render: (text, record) => (
-                <span>
-                    <Popconfirm
-                        title="Are you sure？"
-                        icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
-                        onConfirm={() => this.handleDelete(record.id)}
-                    >
-                        <a href="#">Delete</a>
-                    </Popconfirm>
-                    <Divider type="vertical" />
-                    <a href="javascript:;" onClick={() => this.handleUpdate(record.id)}>Update</a>
-                </span>
-            ),
-        },
     ]
     handleDelete(id) {
-        fetch(`http://localhost:3001/Tenant/`, {
+        fetch(API_BASE_HOST + ':' + API_BASE_PORT +`/Tenant/`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -121,7 +106,7 @@ class ListTenant extends React.Component {
         })
     }
     TenantList() {
-        fetch(`http://localhost:3001/Tenant`, {
+        fetch(API_BASE_HOST + ':' + API_BASE_PORT +`/Tenant`, {
             method: "get"
         })
         .then(response => response.json())

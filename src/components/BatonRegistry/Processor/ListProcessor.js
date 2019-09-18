@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { Table, Divider, Icon, Form, Row, Popconfirm } from 'antd';
+import {API_BASE_HOST} from '../../../constants.js'
+import {API_BASE_PORT} from '../../../constants.js'
 import 'antd/dist/antd.css';
 import ProcessorCreateForm from './CreateProcessor';
 import ProcessorUpdateForm from './UpdateProcessor';
 
 const CreateProcessor = Form.create({ name: 'advanced_search' })(ProcessorCreateForm);
 const UpdateProcessor = Form.create({ name: 'advanced_search' })(ProcessorUpdateForm);
+
 
 class ListProcessor extends React.Component {
     state = {
@@ -133,7 +136,7 @@ class ListProcessor extends React.Component {
         },
     ]
     handleDelete(id) {
-        fetch(`http://localhost:3001/Processor/`, {
+        fetch(API_BASE_HOST+ ':' + API_BASE_PORT+`/Processor/`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -179,8 +182,11 @@ class ListProcessor extends React.Component {
         })
     }
     ProcessorList() {
-        fetch(`http://localhost:3001/Processor`, {
-            method: "get"
+        fetch(API_BASE_HOST+ ':' + API_BASE_PORT+`/Processor`, {
+            method: "get",
+            headers: {
+                'Access-Control-Allow-Origin' : "*",
+            },
         })
             .then(response => response.json())
             .then(data => this.setState({

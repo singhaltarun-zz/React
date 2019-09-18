@@ -1,5 +1,7 @@
 import React from 'react';
 import { Form, Icon, Input, Button } from 'antd';
+import {API_BASE_HOST} from '../../../constants.js'
+import {API_BASE_PORT} from '../../../constants.js'
 const sleepcall = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
@@ -7,7 +9,7 @@ function hasErrors(fieldsError) {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
-class SubscriptionCreateForm extends React.Component {
+class ResourceCreateForm extends React.Component {
     componentDidMount() {
         this.props.form.validateFields();
     }
@@ -15,22 +17,20 @@ class SubscriptionCreateForm extends React.Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        fetch(`http://localhost:3001/Subscription/`, {
+        fetch(API_BASE_HOST+':'+API_BASE_PORT+`/Resource/`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "subscription": {
+                "resource": {
                     "id": this.state.id,
-                    "publisher": this.state.publisher,
-                    "event_resource_id": this.state.event_resource_id,
-                    "schema_version": this.state.schema_version,
-                    "processor_id": this.state.processor_id,
-                    "state": {},
-                    "created_at": 21,
-                    "updated_at": 12
+                    "topic_name": this.state.topic_name,
+                    "namespace": this.state.namespace,
+                    "resource_name": this.state.resource_name,
+                    "created_at": 12,
+                    "updated_at": 21
                 }
             })
         })
@@ -39,14 +39,12 @@ class SubscriptionCreateForm extends React.Component {
         sleepcall(500).then(() => {
             this.props.func();
         })
-
     };
     state = {
         "id": '',
-        "publisher": '',
-        "event_resource_id": '',
-        "schema_version": '',
-        "processor_id": ''
+        "topic_name": '',
+        "namespace": '',
+        "resource_name": ''
     }
 
     idHandler(event) {
@@ -54,36 +52,26 @@ class SubscriptionCreateForm extends React.Component {
             id: event.target.value
         })
     }
-    eventHandler(event) {
-        this.setState({
-            event_resource_id: event.target.value
-        })
-    }
-    processorHandler(event) {
-        this.setState({
-            processor_id: event.target.value
-        })
-    }
-    publisherHandler(event) {
-        this.setState({
-            publisher: event.target.value
-        })
-    }
-    schemaHandler(event) {
-        this.setState({
-            schema_version: event.target.value
-        })
-    }
 
-
+    topicNameHandler(event) {
+        this.setState({
+            topic_name: event.target.value
+        })
+    }
+    namespaceHandler(event) {
+        this.setState({
+            namespace: event.target.value
+        })
+    }
+    resourceNameHandler(event) {
+        this.setState({
+            resource_name: event.target.value
+        })
+    }
     render() {
         const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
-
         const idError = isFieldTouched('id') && getFieldError('id');
-        const publisherError = isFieldTouched('publisher') && getFieldError('publisher');
-        const eventError = isFieldTouched('event') && getFieldError('event');
-        const schemaError = isFieldTouched('schema') && getFieldError('schema');
-        const processorError = isFieldTouched('processor') && getFieldError('processor');
+        const org_idError = isFieldTouched('org_id') && getFieldError('org_id');
         return (
             <div style={{
                 display: 'flex', justifyContent: 'center',
@@ -95,7 +83,7 @@ class SubscriptionCreateForm extends React.Component {
             >
                 <Form onSubmit={this.handleSubmit} style={{ margin: 30, padding: 30 }}>
                     <Form.Item style={{ width: '80%' }}>
-                        <label>Create Subscription</label>
+                        <label>Create Resource</label>
                     </Form.Item>
                     <Form.Item validateStatus={idError ? 'error' : ''} help={idError || ''} style={{ width: '80%' }}>
                         {getFieldDecorator('id', {
@@ -107,43 +95,33 @@ class SubscriptionCreateForm extends React.Component {
                             />,
                         )}
                     </Form.Item>
-                    <Form.Item validateStatus={publisherError ? 'error' : ''} help={publisherError || ''} style={{ width: '80%' }}>
-                        {getFieldDecorator('publisher', {
-                            rules: [{ required: true, message: 'Please input your publisher_id!' }],
+                    <Form.Item validateStatus={org_idError ? 'error' : ''} help={org_idError || ''} style={{ width: '80%' }}>
+                        {getFieldDecorator('topic_name', {
+                            rules: [{ required: true, message: 'Please input your org_id!' }],
                         })(
                             <Input
                                 prefix={<Icon type="data" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                placeholder="Publisher" value={this.state.publisher} onChange={this.publisherHandler.bind(this)}
+                                placeholder="TopicName" value={this.state.topic_name} onChange={this.topicNameHandler.bind(this)}
                             />,
                         )}
                     </Form.Item>
-                    <Form.Item validateStatus={eventError ? 'error' : ''} help={eventError || ''} style={{ width: '80%' }}>
-                        {getFieldDecorator('event', {
-                            rules: [{ required: true, message: 'Please input your event_id!' }],
+                    <Form.Item validateStatus={org_idError ? 'error' : ''} help={org_idError || ''} style={{ width: '80%' }}>
+                        {getFieldDecorator('namespace', {
+                            rules: [{ required: true, message: 'Please input your org_id!' }],
                         })(
                             <Input
                                 prefix={<Icon type="data" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                placeholder="Event Resource Id" value={this.state.event_resource_id} onChange={this.eventHandler.bind(this)}
+                                placeholder="Namespace" value={this.state.namespace} onChange={this.namespaceHandler.bind(this)}
                             />,
                         )}
                     </Form.Item>
-                    <Form.Item validateStatus={schemaError ? 'error' : ''} help={schemaError || ''} style={{ width: '80%' }}>
-                        {getFieldDecorator('schema', {
-                            rules: [{ required: true, message: 'Please input your schema_id!' }],
+                    <Form.Item validateStatus={org_idError ? 'error' : ''} help={org_idError || ''} style={{ width: '80%' }}>
+                        {getFieldDecorator('org_id', {
+                            rules: [{ required: true, message: 'Please input your org_id!' }],
                         })(
                             <Input
                                 prefix={<Icon type="data" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                placeholder="Schema Version" value={this.state.schema_version} onChange={this.schemaHandler.bind(this)}
-                            />,
-                        )}
-                    </Form.Item>
-                    <Form.Item validateStatus={processorError ? 'error' : ''} help={processorError || ''} style={{ width: '80%' }}>
-                        {getFieldDecorator('processor', {
-                            rules: [{ required: true, message: 'Please input your processor_id!' }],
-                        })(
-                            <Input
-                                prefix={<Icon type="data" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                                placeholder="Processor Id" value={this.state.processor_id} onChange={this.processorHandler.bind(this)}
+                                placeholder="Resource" value={this.state.resource_name} onChange={this.resourceNameHandler.bind(this)}
                             />,
                         )}
                     </Form.Item>
@@ -158,4 +136,4 @@ class SubscriptionCreateForm extends React.Component {
     }
 }
 
-export default SubscriptionCreateForm;
+export default ResourceCreateForm;
