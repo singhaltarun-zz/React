@@ -34,7 +34,6 @@ class ListTenant extends React.Component {
             width: 200,
             dataIndex: 'id',
             editable: true,
-
         },
         {
             title: 'Org_Id',

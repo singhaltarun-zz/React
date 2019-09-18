@@ -19,9 +19,12 @@ class Job extends React.Component {
         id: 0,
         data: {},
         result: [],
+        jobsWithProcessor: [],
         stats: '',
         displaySatus: 0,
         searchText: '',
+        processor_ids: [],
+        statsMap: new Map(),
     }
 
     
@@ -30,6 +33,40 @@ class Job extends React.Component {
             id: event.target.value
         })
     }
+
+    getProcessorId(statIds) {
+        statIds =  statIds.split(',');
+        fetch(API_BASE_HOST+':'+API_BASE_PORT+`/Stat/bulkStats`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "id": statIds
+            })
+        })
+            .then(response => response.json())
+
+            .then(data => this.extractProcessorIds(data["stats"]))
+            .catch(error => console.log('Error fetching and parsing data', error));
+    }
+
+    extractProcessorIds(data) {
+        var result = [];
+        result.push(data);
+        result = result[0];
+        for(var i=0;i<result.length;i++){
+            this.state.statsMap.get(result[i].id).processor_id = result[i].processor_id
+        }
+        for(var i=0;i<result.length;i++){
+            result[i] = this.state.statsMap.get(result[i].id)
+        }
+        this.setState({
+            jobsWithProcessor : result
+        })
+    }
+
     func(data){
         var result = [];
         result.push(data);
@@ -41,17 +78,20 @@ class Job extends React.Component {
         var  statIDs = '';
          for (i = 0; i < result.length; i++) { 
         statIDs = statIDs + ','+ result[i].stat_id;
+        this.state.statsMap.set(result[i].stat_id, result[i]);
         }
         statIDs = statIDs.substring(1,);
-    this.setState(
-        {
-            result:result,
-            stats:statIDs 
-        }
-    )
+        this.setState(
+            {
+                result:result,
+            }
+        )
+         this.getProcessorId(statIDs)
+
+
         }
     handleSubmit(id) {
-        
+
         fetch(API_BASE_HOST+':'+API_BASE_PORT+`/Job?id=${encodeURIComponent(id)}`, {
             method: 'GET',
         })
@@ -61,8 +101,8 @@ class Job extends React.Component {
     }
 
     listFailedJobs() {
-        
-       
+
+
         fetch(API_BASE_HOST+':'+API_BASE_PORT+`/Job/failed/`, {
             method: 'GET',
         })
@@ -90,8 +130,8 @@ class Job extends React.Component {
         .then(data => this.func(data["job"]))
         .catch(error => console.log('Error fetching and parsing data', error));
     }
-  
-    
+
+
       getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
           <div style={{ padding: 8 }}>
@@ -141,12 +181,12 @@ class Job extends React.Component {
           />
         ),
       });
-    
+
       handleSearch = (selectedKeys, confirm) => {
         confirm();
         this.setState({ searchText: selectedKeys[0] });
       };
-    
+
       handleReset = clearFilters => {
         clearFilters();
         this.setState({ searchText: '' });
@@ -167,12 +207,18 @@ class Job extends React.Component {
             editable: true,
             ...this.getColumnSearchProps('stat_id'),
         },
+          {
+              title: 'Processor_id',
+              dataIndex: 'processor_id',
+              width: 200,
+              editable: true,
+          },
         {
             title: 'Scheduled_At',
             dataIndex: 'scheduled_at',
             width: 200,
             editable: true,
-            ...this.getColumnSearchProps('nascheduled_atme'),
+            ...this.getColumnSearchProps('scheduled_at'),
         },
         {
             title: 'Assigned_At',
@@ -297,6 +343,7 @@ class Job extends React.Component {
         {
             title: 'Action',
             key: 'action',
+            fixed: 'right',
             render: (text, record) => (
                 <span>
                     <a href="javascript:;" onClick={() => this.unblockJob(record.id)}>UnblockJob</a>
@@ -318,11 +365,9 @@ class Job extends React.Component {
                  List Failed Jobs
                  </Button>
                  
-                    <Table dataSource={this.state.result} columns={this.columns} scroll={{ x: 1500 }} style={{ width: '100%' }} />
+                    <Table dataSource={this.state.jobsWithProcessor} columns={this.columns} scroll={{ x: 1500 }} style={{ width: '100%' }} />
                     
                 </div>
-               
-    
             );
     }
 }

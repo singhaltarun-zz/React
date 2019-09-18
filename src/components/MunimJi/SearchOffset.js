@@ -129,7 +129,6 @@ class OffsetSearchForm extends React.Component {
                 result:result
             }
         )
-        console.log(result);
     }
     columns = [
         {
@@ -176,6 +175,7 @@ class OffsetSearchForm extends React.Component {
         },
         {title: 'Update',
         key: 'action',
+            fixed: 'right',
         render: (text, record) => (
             <span>
                 <a href="javascript:;" onClick={() => this.handleUpdateCustom(record)}>UpdateToCustom</a>

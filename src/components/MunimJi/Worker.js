@@ -93,6 +93,7 @@ class Worker extends React.Component {
         {
             title: 'Action',
             key: 'action',
+            fixed: 'right',
             width: 200,     
 
             render: (text, record) => {
