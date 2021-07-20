@@ -24,7 +24,7 @@
     "protoc-gen-grpc-web": "^1.0.5",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-native": "^0.60.3",
+    "react-native": "^0.62.3",
     "react-scripts": "3.0.1",
     "reactstrap": "^8.0.0",
     "transcript": "0.0.6",
